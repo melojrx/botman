@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
+
+:root {
+     --color-primary: #336A74;
+     --white: #fff;
+
+}
+
+* {
+    box-sizing: border-box;
+    font-family: "open sans", sans-serif;
+}
+
+html, body {
+    background-color:rgb(250, 252, 250) ;
+}
+
+a, a:hover {
+    text-decoration: none;
+    color: unset;
+}
+
+header {
+    background-color: var(--color-primary); 
+    color: var(--white);
+    height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+nav h1 {
+    font-size: 24px;
+    font-weight: 7000;
+}
+
+nav a {
+    font-size: 13px;
+    font-weight: 400;
+}
+
+nav h2 {
+    font-size: 12px;
+    font-weight: 7000;
+}
+
+.dsmovie-card img {
+   align-items: center;
+   flex-direction: columnr;
+   width: 80vw; /* view width*/
+   height: 82vh; /* view height*/
+   margin: 10px 10px 20px 20px; 
+   
+}
+
+.dsmovie-pagination-container {
+     display: blockc;
+     margin: 0px auto;
+}
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
