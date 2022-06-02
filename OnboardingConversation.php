@@ -1,5 +1,6 @@
 <?php
 
+use BotMan\BotMan\Messages\Attachments\Location;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Outgoing\Question;
@@ -9,12 +10,15 @@ class OnboardingConversation extends Conversation
 
     protected $firstname;
     protected $email;
+    protected $phone;
+    protected $location;
+    protected $city;
 
     public function askFirstname()
     {
         $this->ask('Olá. Por favor, informe seu nome?', function($answer) {
             $firstName = $answer->getText();
-            $this->say('Bem-vindo '.$firstName);
+            $this->say('Bem-vindo, '.$firstName);
             $this->askEmail();
         });
     }
@@ -24,20 +28,35 @@ class OnboardingConversation extends Conversation
         $this->ask('Nos informe seu email?', function($answer) {
             // Save result
             $this->email = $answer->getText();
-
-            $this->say('Obrigado, '.$this->firstname);
+            $this->say('Obrigado!, '.$this->firstname); 
+            $this->askPhone();
+        });
+    }
+    public function askPhone()
+    {
+        $this->ask('Qual seu Telefone com DDD?', function($answer) {
+            // Save result 
+            $this->phone = $answer->getText();
+            $this->say('Legal!'.$this->firstname);
+            $this->askMood();
+        });
+    }
+    public function askMood() 
+    {
+        $this->ask('Qual seu endereço?', function($answer) {
+            $this->location = $answer->getText();
+            $this->say('Massa! '.$this->firstname);
             $this->askForDatabase();
         });
     }
-
     public function askForDatabase()
     {
-        $question = Question::create('Do you need a database?')
-            ->fallback('Unable to create a new database')
-            ->callbackId('create_database')
+        $question = Question::create('Me diz, você já é Fisiculturista?')
+            ->fallback('Não.')
+            ->callbackId('Sim!')
             ->addButtons([
-                Button::create('Of course')->value('yes'),
-                Button::create('Hell no!')->value('no'),
+                Button::create('Sim')->value('yes'),
+                Button::create('Não!')->value('no'),
             ]);
     
         $this->ask($question, function ($answer) {

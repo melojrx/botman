@@ -17,7 +17,7 @@ $adapter = new FilesystemAdapter();
 
 $botman = BotManFactory::create($config, new SymfonyCache($adapter));
 
-$botman->hears('Oi', function($bot) {
+$botman->hears(['.*Oi.*', '.*Olá.*', '.*Bom dia.*'], function($bot) {
     
     $bot->startConversation(new OnboardingConversation);
     
