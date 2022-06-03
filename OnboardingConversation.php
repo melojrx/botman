@@ -64,7 +64,6 @@ class OnboardingConversation extends Conversation
     
         $this->ask($question, function ($answer) {
             $this->isAtleta = $answer->getValue();
-            $this->say('RESPOSTA, '. $this->isAtleta); // apenas para printar em tela e vermos o valor
             $this->askForMartialArts();
         });
     }
@@ -81,9 +80,47 @@ class OnboardingConversation extends Conversation
     
         $this->ask($question, function ($answer) {
             $this->isMartial = $answer->getValue();
-            $this->say('RESPOSTA, '. $this->isMartial); // apenas para printar em tela e vermos o valor
-            $this->say('Cadastro Confirmado! '.$this->firstname);
+            $this->askForSaveIntoDatabase();
         });
+    }
+
+    public function askForSaveIntoDatabase()
+    {
+        $question = Question::create('Clique em Sim para Salvar informações no Banco de Dados.')
+            ->fallback('Unable to create a new database')
+            ->callbackId('create_database')
+            ->addButtons([
+                Button::create('Sim')->value(true),
+                Button::create('Não')->value(false),
+            ]);
+    
+        $this->ask($question, function ($answer) {
+            // Detect if button was clicked:
+            $this->say($answer->getValue());
+            if($answer->getValue()){
+                $this->save();
+                $this->say('Cadastro Confirmado! '.$this->firstname);
+            } else{
+                $this->askForSaveIntoDatabase();
+            }
+        });
+    }
+
+    public function save() 
+    {
+
+//        $servername = "localhost";
+//        $username = "root";
+//        $password = "";
+//        $dbname = "fisiculturismo";
+//        $conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+
+        $sql = "INSERT INTO tb_client_cli (txt_nome_cli, txt_email_cli,	txt_endereco_cli, txt_fone_cli,	flg_fisicuturista_cli, flg_marcial_cli)
+        VALUES ('$this->firstname','$this->email','$this->location','$this->phone','$this->isAtleta','$this->isMartial')";
+        $conn = new conexao;
+        $conn->connect()->query($sql);
+
+//        $conn->query($sql);
     }
 
     public function run()
