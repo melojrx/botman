@@ -5,7 +5,9 @@ Baixar e instalar o XAMPP: https://www.apachefriends.org/pt_br/download.html
 
 Baixar a instalar o GIT: https://git-scm.com/downloads
 
-Clonar o projeto dentro da pasta htdocs do XAMMP
+Clonar o projeto dentro da pasta htdocs do XAMMP 
+
+https://github.com/melojrx/botman.git
 
 Baixar e instalar o Compose: https://getcomposer.org/download/
 -  Dentro da pasta do projeto, abrir o git bach executar o comando: composer install
