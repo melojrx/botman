@@ -1,9 +1,10 @@
 <?php
 
-use BotMan\BotMan\Messages\Attachments\Location;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Outgoing\Question;
+
+require_once('conn.php');
 
 class OnboardingConversation extends Conversation
 {
@@ -108,19 +109,10 @@ class OnboardingConversation extends Conversation
 
     public function save() 
     {
-
-//        $servername = "localhost";
-//        $username = "root";
-//        $password = "";
-//        $dbname = "fisiculturismo";
-//        $conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
-
-        $sql = "INSERT INTO tb_client_cli (txt_nome_cli, txt_email_cli,	txt_endereco_cli, txt_fone_cli,	flg_fisicuturista_cli, flg_marcial_cli)
+        $sql = "INSERT INTO tb_cliente_cli (txt_nome_cli, txt_email_cli,	txt_endereco_cli, txt_fone_cli,	flg_fisicuturista_cli, flg_marcial_cli)
         VALUES ('$this->firstname','$this->email','$this->location','$this->phone','$this->isAtleta','$this->isMartial')";
         $conn = new conexao;
-        $conn->connect()->query($sql);
-
-//        $conn->query($sql);
+        $conn->db()->query($sql);
     }
 
     public function run()

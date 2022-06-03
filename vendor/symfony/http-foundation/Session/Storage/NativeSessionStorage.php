@@ -12,14 +12,10 @@
 namespace Symfony\Component\HttpFoundation\Session\Storage;
 
 use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
+use Symfony\Component\HttpFoundation\Session\SessionUtils;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\SessionHandlerProxy;
-
-// Help opcache.preload discover always-needed symbols
-class_exists(MetadataBag::class);
-class_exists(StrictSessionHandler::class);
-class_exists(SessionHandlerProxy::class);
 
 /**
  * This provides a base class for session attribute storage.
@@ -54,6 +50,11 @@ class NativeSessionStorage implements SessionStorageInterface
     protected $metadataBag;
 
     /**
+     * @var string|null
+     */
+    private $emulateSameSite;
+
+    /**
      * Depending on how you want the storage driver to behave you probably
      * want to override this constructor entirely.
      *
@@ -73,23 +74,36 @@ class NativeSessionStorage implements SessionStorageInterface
      * cookie_path, "/"
      * cookie_secure, ""
      * cookie_samesite, null
+     * entropy_file, ""
+     * entropy_length, "0"
      * gc_divisor, "100"
      * gc_maxlifetime, "1440"
      * gc_probability, "1"
+     * hash_bits_per_character, "4"
+     * hash_function, "0"
      * lazy_write, "1"
      * name, "PHPSESSID"
      * referer_check, ""
      * serialize_handler, "php"
-     * use_strict_mode, "1"
+     * use_strict_mode, "0"
      * use_cookies, "1"
      * use_only_cookies, "1"
      * use_trans_sid, "0"
+     * upload_progress.enabled, "1"
+     * upload_progress.cleanup, "1"
+     * upload_progress.prefix, "upload_progress_"
+     * upload_progress.name, "PHP_SESSION_UPLOAD_PROGRESS"
+     * upload_progress.freq, "1%"
+     * upload_progress.min-freq, "1"
+     * url_rewriter.tags, "a=href,area=href,frame=src,form=,fieldset="
      * sid_length, "32"
      * sid_bits_per_character, "5"
      * trans_sid_hosts, $_SERVER['HTTP_HOST']
      * trans_sid_tags, "a=href,area=href,frame=src,form="
+     *
+     * @param AbstractProxy|\SessionHandlerInterface|null $handler
      */
-    public function __construct(array $options = [], AbstractProxy|\SessionHandlerInterface $handler = null, MetadataBag $metaBag = null)
+    public function __construct(array $options = [], $handler = null, MetadataBag $metaBag = null)
     {
         if (!\extension_loaded('session')) {
             throw new \LogicException('PHP extension "session" is required.');
@@ -100,7 +114,6 @@ class NativeSessionStorage implements SessionStorageInterface
             'cache_expire' => 0,
             'use_cookies' => 1,
             'lazy_write' => 1,
-            'use_strict_mode' => 1,
         ];
 
         session_register_shutdown();
@@ -112,8 +125,10 @@ class NativeSessionStorage implements SessionStorageInterface
 
     /**
      * Gets the save handler instance.
+     *
+     * @return AbstractProxy|\SessionHandlerInterface
      */
-    public function getSaveHandler(): AbstractProxy|\SessionHandlerInterface
+    public function getSaveHandler()
     {
         return $this->saveHandler;
     }
@@ -121,7 +136,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function start(): bool
+    public function start()
     {
         if ($this->started) {
             return true;
@@ -135,15 +150,16 @@ class NativeSessionStorage implements SessionStorageInterface
             throw new \RuntimeException(sprintf('Failed to start the session because headers have already been sent by "%s" at line %d.', $file, $line));
         }
 
-        $sessionId = $_COOKIE[session_name()] ?? null;
-        if ($sessionId && !preg_match('/^[a-zA-Z0-9,-]{22,}$/', $sessionId)) {
-            // the session ID in the header is invalid, create a new one
-            session_id(session_create_id());
-        }
-
         // ok to try and start the session
         if (!session_start()) {
             throw new \RuntimeException('Failed to start the session.');
+        }
+
+        if (null !== $this->emulateSameSite) {
+            $originalCookie = SessionUtils::popSessionCookie(session_name(), session_id());
+            if (null !== $originalCookie) {
+                header(sprintf('%s; SameSite=%s', $originalCookie, $this->emulateSameSite), false);
+            }
         }
 
         $this->loadSession();
@@ -154,7 +170,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getId(): string
+    public function getId()
     {
         return $this->saveHandler->getId();
     }
@@ -162,7 +178,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function setId(string $id)
+    public function setId($id)
     {
         $this->saveHandler->setId($id);
     }
@@ -170,7 +186,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->saveHandler->getName();
     }
@@ -178,7 +194,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function setName(string $name)
+    public function setName($name)
     {
         $this->saveHandler->setName($name);
     }
@@ -186,7 +202,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function regenerate(bool $destroy = false, int $lifetime = null): bool
+    public function regenerate($destroy = false, $lifetime = null)
     {
         // Cannot regenerate the session ID for non-active sessions.
         if (\PHP_SESSION_ACTIVE !== session_status()) {
@@ -207,7 +223,16 @@ class NativeSessionStorage implements SessionStorageInterface
             $this->metadataBag->stampNew();
         }
 
-        return session_regenerate_id($destroy);
+        $isRegenerated = session_regenerate_id($destroy);
+
+        if (null !== $this->emulateSameSite) {
+            $originalCookie = SessionUtils::popSessionCookie(session_name(), session_id());
+            if (null !== $originalCookie) {
+                header(sprintf('%s; SameSite=%s', $originalCookie, $this->emulateSameSite), false);
+            }
+        }
+
+        return $isRegenerated;
     }
 
     /**
@@ -229,7 +254,7 @@ class NativeSessionStorage implements SessionStorageInterface
 
         // Register error handler to add information about the current save handler
         $previousHandler = set_error_handler(function ($type, $msg, $file, $line) use (&$previousHandler) {
-            if (\E_WARNING === $type && str_starts_with($msg, 'session_write_close():')) {
+            if (\E_WARNING === $type && 0 === strpos($msg, 'session_write_close():')) {
                 $handler = $this->saveHandler instanceof SessionHandlerProxy ? $this->saveHandler->getHandler() : $this->saveHandler;
                 $msg = sprintf('session_write_close(): Failed to write session data with "%s" handler', \get_class($handler));
             }
@@ -284,7 +309,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getBag(string $name): SessionBagInterface
+    public function getBag($name)
     {
         if (!isset($this->bags[$name])) {
             throw new \InvalidArgumentException(sprintf('The SessionBagInterface "%s" is not registered.', $name));
@@ -310,8 +335,10 @@ class NativeSessionStorage implements SessionStorageInterface
 
     /**
      * Gets the MetadataBag.
+     *
+     * @return MetadataBag
      */
-    public function getMetadataBag(): MetadataBag
+    public function getMetadataBag()
     {
         return $this->metadataBag;
     }
@@ -319,7 +346,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function isStarted(): bool
+    public function isStarted()
     {
         return $this->started;
     }
@@ -343,19 +370,25 @@ class NativeSessionStorage implements SessionStorageInterface
         $validOptions = array_flip([
             'cache_expire', 'cache_limiter', 'cookie_domain', 'cookie_httponly',
             'cookie_lifetime', 'cookie_path', 'cookie_secure', 'cookie_samesite',
-            'gc_divisor', 'gc_maxlifetime', 'gc_probability',
-            'lazy_write', 'name', 'referer_check',
+            'entropy_file', 'entropy_length', 'gc_divisor',
+            'gc_maxlifetime', 'gc_probability', 'hash_bits_per_character',
+            'hash_function', 'lazy_write', 'name', 'referer_check',
             'serialize_handler', 'use_strict_mode', 'use_cookies',
-            'use_only_cookies', 'use_trans_sid',
+            'use_only_cookies', 'use_trans_sid', 'upload_progress.enabled',
+            'upload_progress.cleanup', 'upload_progress.prefix', 'upload_progress.name',
+            'upload_progress.freq', 'upload_progress.min_freq', 'url_rewriter.tags',
             'sid_length', 'sid_bits_per_character', 'trans_sid_hosts', 'trans_sid_tags',
         ]);
 
         foreach ($options as $key => $value) {
             if (isset($validOptions[$key])) {
-                if ('cookie_secure' === $key && 'auto' === $value) {
+                if ('cookie_samesite' === $key && \PHP_VERSION_ID < 70300) {
+                    // PHP < 7.3 does not support same_site cookies. We will emulate it in
+                    // the start() method instead.
+                    $this->emulateSameSite = $value;
                     continue;
                 }
-                ini_set('session.'.$key, $value);
+                ini_set('url_rewriter.tags' !== $key ? 'session.'.$key : $key, $value);
             }
         }
     }
@@ -376,9 +409,11 @@ class NativeSessionStorage implements SessionStorageInterface
      * @see https://php.net/sessionhandlerinterface
      * @see https://php.net/sessionhandler
      *
+     * @param AbstractProxy|\SessionHandlerInterface|null $saveHandler
+     *
      * @throws \InvalidArgumentException
      */
-    public function setSaveHandler(AbstractProxy|\SessionHandlerInterface $saveHandler = null)
+    public function setSaveHandler($saveHandler = null)
     {
         if (!$saveHandler instanceof AbstractProxy &&
             !$saveHandler instanceof \SessionHandlerInterface &&

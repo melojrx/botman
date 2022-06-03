@@ -4,29 +4,27 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1a8a1aa24036224de31447a27a0d6eca
+class ComposerStaticInit8aed6016886d62b463d0bb404bf91f3b
 {
     public static $files = array (
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
+        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
+        '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
         '972fda704d680a3a53c68e34e193cb22' => __DIR__ . '/..' . '/react/promise-timer/src/functions_include.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
-        '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '538ca81a9a966a6716601ecf48f4eaef' => __DIR__ . '/..' . '/opis/closure/functions.php',
-        'fe62ba7e10580d903cc46d808b5961a4' => __DIR__ . '/..' . '/tightenco/collect/src/Collect/Support/helpers.php',
-        'caf31cc6ec7cf2241cb6f12c226c3846' => __DIR__ . '/..' . '/tightenco/collect/src/Collect/Support/alias.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'T' => 
+        'v' => 
         array (
-            'Tightenco\\Collect\\' => 18,
+            'voku\\db\\' => 8,
         ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
-            'Symfony\\Component\\VarDumper\\' => 28,
             'Symfony\\Component\\HttpFoundation\\' => 33,
+            'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\Cache\\' => 24,
             'Spatie\\Macroable\\' => 17,
         ),
@@ -45,6 +43,7 @@ class ComposerStaticInit1a8a1aa24036224de31447a27a0d6eca
             'Psr\\Log\\' => 8,
             'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
+            'Prettus\\Validator\\' => 18,
         ),
         'O' => 
         array (
@@ -54,6 +53,20 @@ class ComposerStaticInit1a8a1aa24036224de31447a27a0d6eca
         array (
             'Mpociot\\Pipeline\\' => 17,
         ),
+        'I' => 
+        array (
+            'Illuminate\\Validation\\' => 22,
+            'Illuminate\\Translation\\' => 23,
+            'Illuminate\\Support\\' => 19,
+            'Illuminate\\Filesystem\\' => 22,
+            'Illuminate\\Contracts\\' => 21,
+            'Illuminate\\Container\\' => 21,
+        ),
+        'D' => 
+        array (
+            'Doctrine\\Inflector\\' => 19,
+            'Doctrine\\Common\\Inflector\\' => 26,
+        ),
         'B' => 
         array (
             'BotMan\\Drivers\\Web\\' => 19,
@@ -62,21 +75,21 @@ class ComposerStaticInit1a8a1aa24036224de31447a27a0d6eca
     );
 
     public static $prefixDirsPsr4 = array (
-        'Tightenco\\Collect\\' => 
+        'voku\\db\\' => 
         array (
-            0 => __DIR__ . '/..' . '/tightenco/collect/src/Collect',
+            0 => __DIR__ . '/../..' . '/src/voku/db',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Component\\VarDumper\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/var-dumper',
-        ),
         'Symfony\\Component\\HttpFoundation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/http-foundation',
+        ),
+        'Symfony\\Component\\Finder\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/finder',
         ),
         'Symfony\\Component\\Cache\\' => 
         array (
@@ -126,6 +139,10 @@ class ComposerStaticInit1a8a1aa24036224de31447a27a0d6eca
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
+        'Prettus\\Validator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/prettus/laravel-validation/src/Prettus/Validator',
+        ),
         'Opis\\Closure\\' => 
         array (
             0 => __DIR__ . '/..' . '/opis/closure/src',
@@ -133,6 +150,38 @@ class ComposerStaticInit1a8a1aa24036224de31447a27a0d6eca
         'Mpociot\\Pipeline\\' => 
         array (
             0 => __DIR__ . '/..' . '/mpociot/pipeline/src',
+        ),
+        'Illuminate\\Validation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/validation',
+        ),
+        'Illuminate\\Translation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/translation',
+        ),
+        'Illuminate\\Support\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/support',
+        ),
+        'Illuminate\\Filesystem\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/filesystem',
+        ),
+        'Illuminate\\Contracts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/contracts',
+        ),
+        'Illuminate\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/container',
+        ),
+        'Doctrine\\Inflector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Inflector',
+        ),
+        'Doctrine\\Common\\Inflector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Common/Inflector',
         ),
         'BotMan\\Drivers\\Web\\' => 
         array (
@@ -161,10 +210,10 @@ class ComposerStaticInit1a8a1aa24036224de31447a27a0d6eca
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1a8a1aa24036224de31447a27a0d6eca::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1a8a1aa24036224de31447a27a0d6eca::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit1a8a1aa24036224de31447a27a0d6eca::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit1a8a1aa24036224de31447a27a0d6eca::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit8aed6016886d62b463d0bb404bf91f3b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit8aed6016886d62b463d0bb404bf91f3b::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit8aed6016886d62b463d0bb404bf91f3b::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit8aed6016886d62b463d0bb404bf91f3b::$classMap;
 
         }, null, ClassLoader::class);
     }

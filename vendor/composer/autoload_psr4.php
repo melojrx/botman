@@ -6,10 +6,10 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Tightenco\\Collect\\' => array($vendorDir . '/tightenco/collect/src/Collect'),
+    'voku\\db\\' => array($baseDir . '/src/voku/db'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
-    'Symfony\\Component\\VarDumper\\' => array($vendorDir . '/symfony/var-dumper'),
     'Symfony\\Component\\HttpFoundation\\' => array($vendorDir . '/symfony/http-foundation'),
+    'Symfony\\Component\\Finder\\' => array($vendorDir . '/symfony/finder'),
     'Symfony\\Component\\Cache\\' => array($vendorDir . '/symfony/cache'),
     'Spatie\\Macroable\\' => array($vendorDir . '/spatie/macroable/src'),
     'React\\Stream\\' => array($vendorDir . '/react/stream/src'),
@@ -22,8 +22,17 @@ return array(
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
+    'Prettus\\Validator\\' => array($vendorDir . '/prettus/laravel-validation/src/Prettus/Validator'),
     'Opis\\Closure\\' => array($vendorDir . '/opis/closure/src'),
     'Mpociot\\Pipeline\\' => array($vendorDir . '/mpociot/pipeline/src'),
+    'Illuminate\\Validation\\' => array($vendorDir . '/illuminate/validation'),
+    'Illuminate\\Translation\\' => array($vendorDir . '/illuminate/translation'),
+    'Illuminate\\Support\\' => array($vendorDir . '/illuminate/support'),
+    'Illuminate\\Filesystem\\' => array($vendorDir . '/illuminate/filesystem'),
+    'Illuminate\\Contracts\\' => array($vendorDir . '/illuminate/contracts'),
+    'Illuminate\\Container\\' => array($vendorDir . '/illuminate/container'),
+    'Doctrine\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib/Doctrine/Inflector'),
+    'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib/Doctrine/Common/Inflector'),
     'BotMan\\Drivers\\Web\\' => array($vendorDir . '/botman/driver-web/src'),
     'BotMan\\BotMan\\' => array($vendorDir . '/botman/botman/src'),
 );

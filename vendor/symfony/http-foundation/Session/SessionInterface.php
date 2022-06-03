@@ -23,29 +23,39 @@ interface SessionInterface
     /**
      * Starts the session storage.
      *
+     * @return bool True if session started
+     *
      * @throws \RuntimeException if session fails to start
      */
-    public function start(): bool;
+    public function start();
 
     /**
      * Returns the session ID.
+     *
+     * @return string The session ID
      */
-    public function getId(): string;
+    public function getId();
 
     /**
      * Sets the session ID.
+     *
+     * @param string $id
      */
-    public function setId(string $id);
+    public function setId($id);
 
     /**
      * Returns the session name.
+     *
+     * @return mixed The session name
      */
-    public function getName(): string;
+    public function getName();
 
     /**
      * Sets the session name.
+     *
+     * @param string $name
      */
-    public function setName(string $name);
+    public function setName($name);
 
     /**
      * Invalidates the current session.
@@ -57,8 +67,10 @@ interface SessionInterface
      *                      will leave the system settings unchanged, 0 sets the cookie
      *                      to expire with browser session. Time is in seconds, and is
      *                      not a Unix timestamp.
+     *
+     * @return bool True if session invalidated, false if error
      */
-    public function invalidate(int $lifetime = null): bool;
+    public function invalidate($lifetime = null);
 
     /**
      * Migrates the current session to a new session id while maintaining all
@@ -69,8 +81,10 @@ interface SessionInterface
      *                       will leave the system settings unchanged, 0 sets the cookie
      *                       to expire with browser session. Time is in seconds, and is
      *                       not a Unix timestamp.
+     *
+     * @return bool True if session migrated, false if error
      */
-    public function migrate(bool $destroy = false, int $lifetime = null): bool;
+    public function migrate($destroy = false, $lifetime = null);
 
     /**
      * Force the session to be saved and closed.
@@ -83,35 +97,53 @@ interface SessionInterface
 
     /**
      * Checks if an attribute is defined.
+     *
+     * @param string $name The attribute name
+     *
+     * @return bool true if the attribute is defined, false otherwise
      */
-    public function has(string $name): bool;
+    public function has($name);
 
     /**
      * Returns an attribute.
+     *
+     * @param string $name    The attribute name
+     * @param mixed  $default The default value if not found
+     *
+     * @return mixed
      */
-    public function get(string $name, mixed $default = null): mixed;
+    public function get($name, $default = null);
 
     /**
      * Sets an attribute.
+     *
+     * @param string $name
+     * @param mixed  $value
      */
-    public function set(string $name, mixed $value);
+    public function set($name, $value);
 
     /**
      * Returns attributes.
+     *
+     * @return array Attributes
      */
-    public function all(): array;
+    public function all();
 
     /**
      * Sets attributes.
+     *
+     * @param array $attributes Attributes
      */
     public function replace(array $attributes);
 
     /**
      * Removes an attribute.
      *
+     * @param string $name
+     *
      * @return mixed The removed value or null when it does not exist
      */
-    public function remove(string $name): mixed;
+    public function remove($name);
 
     /**
      * Clears all attributes.
@@ -120,8 +152,10 @@ interface SessionInterface
 
     /**
      * Checks if the session was started.
+     *
+     * @return bool
      */
-    public function isStarted(): bool;
+    public function isStarted();
 
     /**
      * Registers a SessionBagInterface with the session.
@@ -130,11 +164,17 @@ interface SessionInterface
 
     /**
      * Gets a bag instance by name.
+     *
+     * @param string $name
+     *
+     * @return SessionBagInterface
      */
-    public function getBag(string $name): SessionBagInterface;
+    public function getBag($name);
 
     /**
      * Gets session meta.
+     *
+     * @return MetadataBag
      */
-    public function getMetadataBag(): MetadataBag;
+    public function getMetadataBag();
 }
