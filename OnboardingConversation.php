@@ -13,6 +13,7 @@ class OnboardingConversation extends Conversation
     protected $phone;
     protected $location;
     protected $city;
+    protected $isAtleta;
 
     public function askFirstname()
     {
@@ -46,25 +47,23 @@ class OnboardingConversation extends Conversation
         $this->ask('Qual seu endereço?', function($answer) {
             $this->location = $answer->getText();
             $this->say('Massa! '.$this->firstname);
-            $this->askForDatabase();
+            $this->askForBodybuilder();
         });
     }
-    public function askForDatabase()
+
+        public function askForBodybuilder()
     {
         $question = Question::create('Me diz, você já é Fisiculturista?')
-            ->fallback('Não.')
-            ->callbackId('Sim!')
+            ->fallback('Vem ser com a gente!')
+            ->callbackId('Legal!')
             ->addButtons([
-                Button::create('Sim')->value('yes'),
-                Button::create('Não!')->value('no'),
+                Button::create('Sim')->value(true),
+                Button::create('Não')->value(false),
             ]);
     
         $this->ask($question, function ($answer) {
-            // Detect if button was clicked:
-            if ($answer->isInteractiveMessageReply()) {
-                $selectedValue = $answer->getValue(); // will be either 'yes' or 'no'
-                $selectedText = $answer->getText(); // will be either 'Of course' or 'Hell no!'
-            }
+            $this->isAtleta = $answer->getValue();
+            $this->say('RESPOSTA, '. $this->isAtleta); // apenas para printar em tela e vermos o valor
         });
     }
 
