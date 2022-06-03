@@ -14,6 +14,7 @@ class OnboardingConversation extends Conversation
     protected $location;
     protected $city;
     protected $isAtleta;
+    protected $isMartial;
 
     public function askFirstname()
     {
@@ -51,7 +52,7 @@ class OnboardingConversation extends Conversation
         });
     }
 
-        public function askForBodybuilder()
+    public function askForBodybuilder()
     {
         $question = Question::create('Me diz, você já é Fisiculturista?')
             ->fallback('Vem ser com a gente!')
@@ -64,6 +65,23 @@ class OnboardingConversation extends Conversation
         $this->ask($question, function ($answer) {
             $this->isAtleta = $answer->getValue();
             $this->say('RESPOSTA, '. $this->isAtleta); // apenas para printar em tela e vermos o valor
+            $this->askForMartialArts();
+        });
+    }
+
+    public function askForMartialArts()
+    {
+        $question = Question::create('Me diz outra coisa, você pratica artes marciais?')
+            ->fallback('Vem praticar com a gente!')
+            ->callbackId('Legal!')
+            ->addButtons([
+                Button::create('Sim')->value(true),
+                Button::create('Não')->value(false),
+            ]);
+    
+        $this->ask($question, function ($answer) {
+            $this->isMartial = $answer->getValue();
+            $this->say('RESPOSTA, '. $this->isMartial); // apenas para printar em tela e vermos o valor
         });
     }
 
