@@ -8,16 +8,18 @@ class conexao extends mysqli{
     private $dbname;
     private $port;
 
-    public $conn;
+    //public $conn;
 
     public function __construct()
     {
+/*        
         $this->servername = "localhost";
         $this->username = "root";
         $this->password = "";
         $this->dbname = "fisiculturista";
 
         $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+        */
     }
 
 
