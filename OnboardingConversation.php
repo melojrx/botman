@@ -97,7 +97,6 @@ class OnboardingConversation extends Conversation
     
         $this->ask($question, function ($answer) {
             // Detect if button was clicked:
-            $this->say($answer->getValue());
             if($answer->getValue()){
                 $this->save();
                 $this->say('Cadastro Confirmado! '.$this->firstname);
