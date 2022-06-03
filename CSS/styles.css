@@ -54,7 +54,7 @@ nav h2 {
    flex-direction: columnr;
    width: 80vw; /* view width*/
    height: 82vh; /* view height*/
-   margin: 10px 10px 20px 20px; 
+   margin: auto;
    
 }
 
