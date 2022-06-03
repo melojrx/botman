@@ -82,6 +82,7 @@ class OnboardingConversation extends Conversation
         $this->ask($question, function ($answer) {
             $this->isMartial = $answer->getValue();
             $this->say('RESPOSTA, '. $this->isMartial); // apenas para printar em tela e vermos o valor
+            $this->say('Cadastro Confirmado! '.$this->firstname);
         });
     }
 

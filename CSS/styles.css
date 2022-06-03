@@ -51,7 +51,7 @@ nav h2 {
 
 .dsmovie-card img {
    align-items: center;
-   flex-direction: columnr;
+   flex-direction: column;
    width: 80vw; /* view width*/
    height: 82vh; /* view height*/
    margin: auto;
