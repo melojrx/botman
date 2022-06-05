@@ -110,7 +110,7 @@ class OnboardingConversation extends Conversation
 
     public function askForSaveIntoDatabase()
     {
-        $question = Question::create('Clique em Sim para Salvar informações no Banco de Dados.')
+        $question = Question::create('Clique em Sim para confirmar seu cadastro.')
             ->fallback('Unable to create a new database')
             ->callbackId('create_database')
             ->addButtons([
