@@ -29,10 +29,16 @@ class OnboardingConversation extends Conversation
     public function askEmail()
     {
         $this->ask('Nos informe seu email?', function($answer) {
-            // Save result
             $this->email = $answer->getText();
-            $this->say('Obrigado!, '.$this->firstname); 
-            $this->askPhone();
+            $valida = $this->ValidaEmail();
+            if($valida){
+                $this->say('Obrigado!, '.$this->firstname); 
+                $this->askPhone();
+            } else {
+                $this->askEmail();
+            }
+
+
         });
     }
     public function askPhone()
@@ -104,6 +110,12 @@ class OnboardingConversation extends Conversation
                 $this->askForSaveIntoDatabase();
             }
         });
+    }
+
+    // Validador de E-mail 
+    public function ValidaEmail() 
+    {
+        return filter_var($this->email, FILTER_VALIDATE_EMAIL);
     }
 
     public function save() 
