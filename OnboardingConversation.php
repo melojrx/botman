@@ -30,9 +30,10 @@ class OnboardingConversation extends Conversation
     {
         $this->ask('Nos informe seu email?', function($answer) {
             $this->email = $answer->getText();
+            global $firstName;
             $valida = $this->ValidaEmail();
             if($valida){
-                $this->say('Obrigado!, '.$this->firstname); 
+                $this->say('Obrigado! '.$firstName); 
                 $this->askPhone();
             } else {
                 $this->askEmailAgain();
@@ -46,9 +47,10 @@ class OnboardingConversation extends Conversation
     {
         $this->ask('E-mail inválido. Por favor, nos informe um e-mail válido?', function($answer) {
             $this->email = $answer->getText();
+            global $firstName;
             $valida = $this->ValidaEmail();
             if($valida){
-                $this->say('Obrigado!, '.$this->firstname); 
+                $this->say('Obrigado! '.$firstName); 
                 $this->askPhone();
             } else {
                 $this->askEmailAgain();
@@ -63,7 +65,8 @@ class OnboardingConversation extends Conversation
         $this->ask('Qual seu Telefone com DDD?', function($answer) {
             // Save result 
             $this->phone = $answer->getText();
-            $this->say('Legal!'.$this->firstname);
+            global $firstName;
+            $this->say('Legal!'.$firstName);
             $this->askMood();
         });
     }
@@ -71,7 +74,7 @@ class OnboardingConversation extends Conversation
     {
         $this->ask('Qual seu endereço?', function($answer) {
             $this->location = $answer->getText();
-            $this->say('Massa! '.$this->firstname);
+            $this->say('Massa!');
             $this->askForBodybuilder();
         });
     }
@@ -122,7 +125,7 @@ class OnboardingConversation extends Conversation
             // Detect if button was clicked:
             if($answer->getValue()){
                 $this->save();
-                $this->say('Cadastro Confirmado! '.$this->firstname);
+                $this->say('Cadastro Confirmado!');
             } else{
                 $this->askForSaveIntoDatabase();
             }
