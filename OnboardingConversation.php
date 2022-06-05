@@ -35,12 +35,29 @@ class OnboardingConversation extends Conversation
                 $this->say('Obrigado!, '.$this->firstname); 
                 $this->askPhone();
             } else {
-                $this->askEmail();
+                $this->askEmailAgain();
             }
 
 
         });
     }
+
+    public function askEmailAgain()
+    {
+        $this->ask('E-mail inválido. Por favor, nos informe um e-mail válido?', function($answer) {
+            $this->email = $answer->getText();
+            $valida = $this->ValidaEmail();
+            if($valida){
+                $this->say('Obrigado!, '.$this->firstname); 
+                $this->askPhone();
+            } else {
+                $this->askEmailAgain();
+            }
+
+
+        });
+    }
+
     public function askPhone()
     {
         $this->ask('Qual seu Telefone com DDD?', function($answer) {
