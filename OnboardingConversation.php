@@ -19,9 +19,9 @@ class OnboardingConversation extends Conversation
 
     public function askFirstname()
     {
-        $this->ask('Olá. Por favor, informe seu nome?', function($answer) {
-            $firstName = $answer->getText();
-            $this->say('Bem-vindo, '.$firstName);
+        $this->ask('Olá. Por favor, informe seu nome KKKKKKK?', function($answer) {
+            $this->firstname = $answer->getText();
+            $this->say('Bem-vindo, '.$this->firstname);
             $this->askEmail();
         });
     }
@@ -30,10 +30,9 @@ class OnboardingConversation extends Conversation
     {
         $this->ask('Nos informe seu email?', function($answer) {
             $this->email = $answer->getText();
-            global $firstName;
             $valida = $this->ValidaEmail();
             if($valida){
-                $this->say('Obrigado! '.$firstName); 
+                $this->say('Obrigado!, '.$this->firstname); 
                 $this->askPhone();
             } else {
                 $this->askEmailAgain();
@@ -45,12 +44,11 @@ class OnboardingConversation extends Conversation
 
     public function askEmailAgain()
     {
-        $this->ask('E-mail inválido. Por favor, nos informe um e-mail válido?', function($answer) {
+        $this->ask('E-mail inválido. Por favor, nos informe um e-mail válido.', function($answer) {
             $this->email = $answer->getText();
-            global $firstName;
             $valida = $this->ValidaEmail();
             if($valida){
-                $this->say('Obrigado! '.$firstName); 
+                $this->say('Obrigado!, '.$this->firstname); 
                 $this->askPhone();
             } else {
                 $this->askEmailAgain();
@@ -65,8 +63,7 @@ class OnboardingConversation extends Conversation
         $this->ask('Qual seu Telefone com DDD?', function($answer) {
             // Save result 
             $this->phone = $answer->getText();
-            global $firstName;
-            $this->say('Legal!'.$firstName);
+            $this->say('Legal,'.$this->firstname);
             $this->askMood();
         });
     }
@@ -74,7 +71,7 @@ class OnboardingConversation extends Conversation
     {
         $this->ask('Qual seu endereço?', function($answer) {
             $this->location = $answer->getText();
-            $this->say('Massa!');
+            $this->say('Massa, '.$this->firstname);
             $this->askForBodybuilder();
         });
     }
@@ -125,7 +122,7 @@ class OnboardingConversation extends Conversation
             // Detect if button was clicked:
             if($answer->getValue()){
                 $this->save();
-                $this->say('Cadastro Confirmado!');
+                $this->say('Cadastro Confirmado! '.$this->firstname);
             } else{
                 $this->askForSaveIntoDatabase();
             }
@@ -140,7 +137,7 @@ class OnboardingConversation extends Conversation
 
     public function save() 
     {
-        $sql = "INSERT INTO tb_cliente_cli (txt_nome_cli, txt_email_cli,	txt_endereco_cli, txt_fone_cli,	flg_fisicuturista_cli, flg_marcial_cli)
+        $sql = "INSERT INTO tb_cliente_cli (txt_nome_cli, txt_email_cli, txt_endereco_cli, txt_fone_cli, flg_fisicuturista_cli, flg_marcial_cli)
         VALUES ('$this->firstname','$this->email','$this->location','$this->phone','$this->isAtleta','$this->isMartial')";
         $conn = new conexao;
         $conn->db()->query($sql);
