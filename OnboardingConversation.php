@@ -14,6 +14,8 @@ class OnboardingConversation extends Conversation
     protected $phone;
     protected $location;
     protected $city;
+    protected $idModalidade;
+    protected $txtModalidade;
     protected $isAtleta;
     protected $isMartial;
 
@@ -103,8 +105,67 @@ class OnboardingConversation extends Conversation
             ]);
     
         $this->ask($question, function ($answer) {
-            $this->isMartial = $answer->getValue();
-            $this->askForSaveIntoDatabase();
+            $this->isMartial = $answer->getValue();           
+            if($this->isMartial){
+                $this->askForModalidade();
+            }else{
+                $this->askForSaveIntoDatabase();
+            }
+        });
+    }
+
+    public function askForModalidade()
+    {
+        $this->ask('Excelente! Digite o número da modalidade que você pratica? <br/>
+                    1 - MMA <br/>
+                    2 - Jiu-Jitsu <br/>
+                    3 - Boxe <br/>
+                    4 - Muay Thai <br/>
+                    5 - KaratÊ <br/>
+                    6 - Outros', function($answer) {
+            $this->idModalidade = (int)$answer->getText();
+            if($this->idModalidade != 1 && $this->idModalidade != 2 && $this->idModalidade != 3 &&
+                    $this->idModalidade != 4 && $this->idModalidade != 5 && $this->idModalidade != 6) {
+                $this->askForModalidadeAgain();
+            } else if($this->idModalidade == 6) {
+                $this->askForTextoModalidade();
+            } else {
+                $this->txtModalidade = "";
+                $this->askForSaveIntoDatabase();
+            }
+
+        });
+    }
+
+    public function askForModalidadeAgain()
+    {
+        $this->ask("Não Entendi! Digite o número da modalidade que você pratica? <br/>
+                    1 - MMA <br/>
+                    2 - Jiu-Jitsu <br/>
+                    3 - Boxe <br/>
+                    4 - Muay Thai <br/>
+                    5 - KaratÊ <br/>
+                    6 - Outros <br/>", function($answer) {
+            $this->idModalidade = (int)$answer->getText();
+            if($this->idModalidade != 1 && $this->idModalidade != 2 && $this->idModalidade != 3 &&
+                $this->idModalidade != 4 && $this->idModalidade != 5 && $this->idModalidade != 6) {
+                    $this->askForModalidadeAgain();
+            } else if($this->idModalidade == 6) {
+                $this->askForTextoModalidade();
+            } else {
+                $this->txtModalidade = "";
+                $this->askForSaveIntoDatabase();
+            }
+
+        });
+    }
+
+    public function askForTextoModalidade()
+    {
+        $this->ask("Que diferente! Qual modalidade você Pratica?", function($answer) {
+        $this->txtModalidade = $answer->getText();
+        $this->say('Massa, '.$this->firstname);
+        $this->askForSaveIntoDatabase();
         });
     }
 
@@ -119,11 +180,12 @@ class OnboardingConversation extends Conversation
             ]);
     
         $this->ask($question, function ($answer) {
+            $selected = $answer->getValue();
             // Detect if button was clicked:
-            if($answer->getValue()){
+            if($selected) {
                 $this->save();
-                $this->say('Cadastro Confirmado! '.$this->firstname);
-            } else{
+                $this->say('Parabéns, '.$this->firstname.'. Cadastro Confirmado!');
+            } else {
                 $this->askForSaveIntoDatabase();
             }
         });
@@ -137,10 +199,11 @@ class OnboardingConversation extends Conversation
 
     public function save() 
     {
-        $sql = "INSERT INTO tb_cliente_cli (txt_nome_cli, txt_email_cli, txt_endereco_cli, txt_fone_cli, flg_fisicuturista_cli, flg_marcial_cli)
-        VALUES ('$this->firstname','$this->email','$this->location','$this->phone','$this->isAtleta','$this->isMartial')";
-        $conn = new conexao;
-        $conn->db()->query($sql);
+        $sql = "INSERT INTO tb_cliente_cli (txt_nome_cli, txt_email_cli, txt_endereco_cli, txt_fone_cli, 
+                id_modalidade_cli, txt_modalidade_cli, flg_fisicuturista_cli, flg_marcial_cli) 
+        VALUES ('$this->firstname','$this->email','$this->location','$this->phone','$this->idModalidade', '$this->txtModalidade','$this->isAtleta','$this->isMartial')";
+            $conn = new conexao;
+            $conn->db()->query($sql);
     }
 
     public function run()

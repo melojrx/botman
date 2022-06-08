@@ -17,14 +17,14 @@ $adapter = new FilesystemAdapter();
 
 $botman = BotManFactory::create($config, new SymfonyCache($adapter));
 
-$botman->hears(['.*Oi.*', '.*Olá.*', '.*Bom dia.*', '.*Ola.*'], function($bot) {
+$botman->hears(['.*Oi.*', '.*Olá.*', '.*Bom dia.*', '.*Boa Tarde.*', '.*Boa Noite.*', '.*Ola.*'], function($bot) {
     
     $bot->startConversation(new OnboardingConversation);
     
 });
 
 $botman->fallback(function($bot) {
-    $bot->reply('Desculpe! Você precisa digitar Olá para iniciarmos seu cadastro. ');
+    $bot->reply('Desculpe! Não entendi. Que tal começarmos com um "Oi", "Olá", "Bom dia", "Boa tarde" ou "Boa noite"? Essas palavras eu entendo. :)');
 });
 
 $botman->listen();
