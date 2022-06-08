@@ -23,9 +23,8 @@ $botman->hears(['.*Oi.*', '.*Olá.*', '.*Bom dia.*', '.*Ola.*'], function($bot) 
     
 });
 
-//$botman->fallback(function($bot) {
-//    $bot->reply('Sorry, I did not understand these commands. Here is a list of commands I understand: ...');
-//});
-//
+$botman->fallback(function($bot) {
+    $bot->reply('Desculpe! Você precisa digitar Olá para iniciarmos seu cadastro. ');
+});
 
 $botman->listen();
