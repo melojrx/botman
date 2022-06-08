@@ -19,7 +19,7 @@ class OnboardingConversation extends Conversation
 
     public function askFirstname()
     {
-        $this->ask('Olá. Por favor, informe seu nome KKKKKKK?', function($answer) {
+        $this->ask('Olá. Por favor, informe seu nome?', function($answer) {
             $this->firstname = $answer->getText();
             $this->say('Bem-vindo, '.$this->firstname);
             $this->askEmail();
