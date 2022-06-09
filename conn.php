@@ -1,31 +1,28 @@
 <?php
 
-class conexao extends mysqli{
+class conexao extends mysqli {
 
     private $servername;
     private $username;
     private $password;
     private $dbname;
-    private $port;
-
-    public $conn;
 
     public function __construct(){}
 
     public function db(): mysqli
     {
-        //Testes
-        $this->servername = "us-cdbr-east-05.cleardb.net";
-        $this->username = "b964733ad066d5";
-        $this->password = "3b2de8d6";
-        $this->dbname = "heroku_02d5d5e218a30e2";
+        // Testes
+//        $this->servername = "us-cdbr-east-05.cleardb.net";
+//        $this->username = "b964733ad066d5";
+//        $this->password = "3b2de8d6";
+//        $this->dbname = "heroku_02d5d5e218a30e2";
 
-        /* Denvolvimento
+        // Denvolvimento
         $this->servername = "localhost";
         $this->username = "root";
         $this->password = "";
         $this->dbname = "fisiculturismo";
-        */
+        
         // Producao
 //        $this->servername = "";
 //        $this->username = "";

@@ -17,6 +17,7 @@ class OnboardingConversation extends Conversation
     protected $idModalidade;
     protected $txtModalidade;
     protected $isAtleta;
+    protected $isMusculacao;
     protected $isMartial;
 
     public function askFirstname()
@@ -81,8 +82,6 @@ class OnboardingConversation extends Conversation
     public function askForBodybuilder()
     {
         $question = Question::create('Me diz, você já é Fisiculturista?')
-            ->fallback('Vem ser com a gente!')
-            ->callbackId('Legal!')
             ->addButtons([
                 Button::create('Sim')->value(true),
                 Button::create('Não')->value(false),
@@ -90,6 +89,20 @@ class OnboardingConversation extends Conversation
     
         $this->ask($question, function ($answer) {
             $this->isAtleta = $answer->getValue();
+            $this->askForMusculacao();
+        });
+    }
+
+    public function askForMusculacao()
+    {
+        $question = Question::create('Você pratica musculação?')
+            ->addButtons([
+                Button::create('Sim')->value(true),
+                Button::create('Não')->value(false),
+            ]);
+    
+        $this->ask($question, function ($answer) {
+            $this->isMusculacao = $answer->getValue();
             $this->askForMartialArts();
         });
     }
@@ -97,20 +110,19 @@ class OnboardingConversation extends Conversation
     public function askForMartialArts()
     {
         $question = Question::create('Me diz outra coisa, você pratica artes marciais?')
-            ->fallback('Vem praticar com a gente!')
-            ->callbackId('Legal!')
             ->addButtons([
-                Button::create('Sim')->value(true),
-                Button::create('Não')->value(false),
+                Button::create('Sim')->value('Sim'),
+                Button::create('Não')->value('Nao'),
             ]);
     
         $this->ask($question, function ($answer) {
-            $this->isMartial = $answer->getValue();           
+            $this->isMartial =($answer->getValue() == 'Sim') ? true : false;
             if($this->isMartial){
                 $this->askForModalidade();
             }else{
                 $this->askForSaveIntoDatabase();
             }
+
         });
     }
 
@@ -123,7 +135,7 @@ class OnboardingConversation extends Conversation
                     4 - Muay Thai <br/>
                     5 - KaratÊ <br/>
                     6 - Outros', function($answer) {
-            $this->idModalidade = (int)$answer->getText();
+            $this->idModalidade = (int) $answer->getText();
             if($this->idModalidade != 1 && $this->idModalidade != 2 && $this->idModalidade != 3 &&
                     $this->idModalidade != 4 && $this->idModalidade != 5 && $this->idModalidade != 6) {
                 $this->askForModalidadeAgain();
@@ -183,6 +195,8 @@ class OnboardingConversation extends Conversation
             $selected = $answer->getValue();
             // Detect if button was clicked:
             if($selected) {
+//                $retorno = $this->save();
+//                $this->say('retorno, '.$retorno);
                 $this->save();
                 $this->say('Parabéns, '.$this->firstname.'. Cadastro Confirmado!');
             } else {
@@ -200,10 +214,12 @@ class OnboardingConversation extends Conversation
     public function save() 
     {
         $sql = "INSERT INTO tb_cliente_cli (txt_nome_cli, txt_email_cli, txt_endereco_cli, txt_fone_cli, 
-                id_modalidade_cli, txt_modalidade_cli, flg_fisicuturista_cli, flg_marcial_cli) 
-        VALUES ('$this->firstname','$this->email','$this->location','$this->phone','$this->idModalidade', '$this->txtModalidade','$this->isAtleta','$this->isMartial')";
-            $conn = new conexao;
-            $conn->db()->query($sql);
+                id_modalidade_cli, txt_modalidade_cli, flg_fisicuturista_cli, flg_musculacao_cli , flg_marcial_cli) 
+        VALUES ('$this->firstname','$this->email','$this->location','$this->phone','$this->idModalidade', 
+                '$this->txtModalidade','$this->isAtleta','$this->isMusculacao','$this->isMartial')";
+        $conn = new conexao;
+        $conn->db()->query($sql);
+//        return $sql;
     }
 
     public function run()
