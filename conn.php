@@ -14,18 +14,18 @@ class conexao extends mysqli{
 
     public function db(): mysqli
     {
-        // Testes
-//        $this->servername = "us-cdbr-east-05.cleardb.net";
-//        $this->username = "b7a2de452118e5";
-//        $this->password = "774ca8b5";
-//        $this->dbname = "heroku_0c61de362cfd21e";
+        //Testes
+        $this->servername = "us-cdbr-east-05.cleardb.net";
+        $this->username = "b964733ad066d5";
+        $this->password = "3b2de8d6";
+        $this->dbname = "heroku_02d5d5e218a30e2";
 
-        // Denvolvimento
+        /* Denvolvimento
         $this->servername = "localhost";
         $this->username = "root";
         $this->password = "";
         $this->dbname = "fisiculturismo";
-
+        */
         // Producao
 //        $this->servername = "";
 //        $this->username = "";
