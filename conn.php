@@ -8,7 +8,7 @@ class conexao extends mysqli{
     private $dbname;
     private $port;
 
-    //public $conn;
+    public $conn;
 
     public function __construct(){}
 

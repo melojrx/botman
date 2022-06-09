@@ -1,4 +1,4 @@
-CREATE database fisicultrismo;
+CREATE database Fisiculturismo;
 
 CREATE TABLE `tb_modalidade_mod` (`id_modalidade_mod` bigint(11) NOT NULL AUTO_INCREMENT,`txt_modalidade_mod` varchar(100) NOT NULL, 
 `dat_fim_mod` timestamp NULL, CONSTRAINT modalidade_pk PRIMARY KEY (id_modalidade_mod));
