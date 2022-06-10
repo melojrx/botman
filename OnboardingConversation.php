@@ -187,12 +187,12 @@ class OnboardingConversation extends Conversation
             ->fallback('Unable to create a new database')
             ->callbackId('create_database')
             ->addButtons([
-                Button::create('Sim')->value(true),
-                Button::create('Não')->value(false),
+                Button::create('Sim')->value('Sim'),
+                Button::create('Não')->value('Nao'),
             ]);
     
         $this->ask($question, function ($answer) {
-            $selected = $answer->getValue();
+            $selected =($answer->getValue() == 'Sim') ? true : false;
             // Detect if button was clicked:
             if($selected) {
 //                $retorno = $this->save();
